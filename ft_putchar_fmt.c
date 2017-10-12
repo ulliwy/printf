@@ -6,13 +6,13 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/20 16:31:22 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/10 12:16:39 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/11 11:40:32 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_putchar_fmt(char c)
+int	ft_putchar_fmt(void *c)
 {
 	write(1, &c, 1);
 	return (1);

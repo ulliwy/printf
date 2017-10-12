@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/10 16:16:48 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/11 16:17:40 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 int		main()
 {
 	//int		a = 9;
+	//int c = 21474836479;
 
-	ft_printf("number: %d\n", 9);
-	// printf("%+f\n", 5.0);
+	//ft_printf("number: %0+8d\n", 9);
+	printf("%+-+-d\n", 5);
+	//printf("%S", L"wابتثجحخدذرزسشصضطظعغفقكلمنهوي");
 	// if (-1)
 	// 	printf("yes\n");
 }

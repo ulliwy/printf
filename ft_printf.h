@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/10 16:08:24 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/11 16:00:25 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 
 # include <stdarg.h>
 # include <stdlib.h>
-
 # include "libft/libft.h"
 
 # define FUNC_ARR_SIZE 255
-
 
 typedef struct 	s_out
 {
@@ -36,15 +34,15 @@ typedef struct	s_fmt
 	int			width;	//field width
 	int			prec;	//precision
 	int			length;	//length modifier
+	int			modifier;
 }				t_fmt;
 
 int				ft_printf(const char* format, ...);
 
-int				ft_putchar_fmt(char c);
-int				ft_putwchar_fmt(int c);
-int				ft_putstr_fmt(char const *s);
+int				ft_putchar_fmt(void *c);
+// int				ft_putwchar_fmt(int c);
+// int				ft_putstr_fmt(char const *s);
 
-int				ft_printnbr(int *nbr);
-
+//int				ft_printnbr(void *nbr);
 
 #endif
