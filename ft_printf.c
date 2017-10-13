@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/13 16:06:24 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/13 16:40:01 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,10 +127,22 @@ int 	get_modifier(t_fmt *fmt, const char **s)
 	return (1);
 }
 
-int 	ft_putchar_fmt(void *c, t_fmt fmt)
+int 	ft_putchar_fmt(void *c, t_fmt *fmt)
 {
+	if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
+		return (0);
+	if (fmt->lajst)
+		ft_putwchar_fmt(*((wchar_t *)c));
+	while (fmt->length > 1)
+	{
+		write(1, " ", 1);
+		fmt->length--;
+	}
+	if (!fmt->lajst)
+		ft_putwchar_fmt(*((wchar_t *)c));
+	printf("\n");
 	printf("final1: %c\n", *((char *)c));
-	printf("final2: %d\n", fmt.modifier);
+	printf("final2: %d\n", fmt->modifier);
 	printf("----------------\n");
 	return (1);
 }
@@ -145,7 +157,7 @@ int		mod_charfmt(t_fmt *fmt, va_list *valist)
 		c = (wchar_t)va_arg(*valist, wint_t);
 	else
 		c = '%';
-	return (ft_putchar_fmt((void *)(&c), *fmt));
+	return (ft_putchar_fmt((void *)(&c), fmt));
 }
 
 int 	ft_putstr_fmt(void *c, t_fmt fmt)

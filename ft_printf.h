@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/13 16:08:02 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/13 16:31:54 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,7 @@ typedef struct	s_fmt
 }				t_fmt;
 
 int				ft_printf(const char* format, ...);
+
+int				ft_putwchar_fmt(wchar_t c);
 
 #endif
