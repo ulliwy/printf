@@ -165,14 +165,14 @@ int 	ft_putstr_fmt(void *c, t_fmt *fmt)
 	to_print = fmt->prec ? (fmt->prec > len ? len : fmt->prec) : len;
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
 	len = to_print + spaces;
-	if (!fmt->lajst)
+	if (fmt->lajst)
 		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
 	while (spaces)
 	{
 		write(1, " ", 1);
 		spaces--;
 	}
-	if (fmt->lajst)
+	if (!fmt->lajst)
 		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
 	return (len);
 }
@@ -246,41 +246,49 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putnbr_fmt((void *)(&c), *fmt));
 }
 
-void 	print_hex(unsigned char *c, int *first)
+void 	print_hex(unsigned char *arr, char *c)
 {
-	if (!(*c) && *first)
-		return ;
-	else if ((!(*c / 16) && (*c % 16) && *first))
+	int 			i;
+	int 			first;
+	int j = 2;
+
+	i = (int)sizeof(arr) - 1;
+	first = 1;
+	c[0] = '0';
+	c[1] = 'x';
+	if (!(*arr))
+		c[j++] = '0';
+	while (*arr && i >= 0)
 	{
-		ft_putchar(HEX[*c % 16]);
-		*first = 0;
+		if (!(arr[i] / 16) && (arr[i] % 16) && first)
+		{
+			c[j++] = HEX[arr[i] % 16];
+			first = 0;
+		}
+		else if (((arr[i] / 16) && (arr[i] % 16)) || !first)
+		{
+			c[j++] = HEX[arr[i] / 16];
+			c[j++] = HEX[arr[i] % 16];
+			first = 0;
+		}
+		i--;
 	}
-	else
-	{
-		ft_putchar(HEX[*c / 16]);
-		ft_putchar(HEX[*c % 16]);
-	}
+	c[j] = '\0';
 }
 
 int 	ft_putptr_fmt(void *c, t_fmt *fmt)
 {
 	unsigned char 	*arr;
-	int 			i;
-	int 			first;
+	char *str;
+	int len;
 
-	i = 0;
-	first = 1;
 	arr = (unsigned char *)&c;
-	ft_putstr("0x");
-	if (!(c))
-		ft_putchar('0');
-	while (i < (int)sizeof(c))
-	{
-		print_hex(&arr[sizeof(arr) - i - 1], &first);
-		i++;
-	}
-	printf("%d\n", fmt->prec);
-	return (1);
+	str = (char *)malloc((int)sizeof(arr) * 2 + 3);
+	print_hex(arr, str);
+	fmt->prec = 0;
+	len = ft_putstr_fmt(str, fmt);
+	free(str);
+	return (len);
 }
 
 int		mod_ptrfmt(t_fmt *fmt, va_list *valist)
