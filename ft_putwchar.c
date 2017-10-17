@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putwchar_fmt.c                                  :+:      :+:    :+:   */
+/*   ft_putwchar.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/10 12:50:23 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/10 13:25:14 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/16 14:25:59 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		ft_putwchar_fmt(wchar_t c)
+int		ft_putwchar(wchar_t c)
 {
 	if (c <= 0x7F)
 		ft_putchar(c);

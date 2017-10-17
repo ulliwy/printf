@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/13 16:40:01 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/16 17:20:24 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void		fmt_init(t_fmt *fmt)
 	fmt->space = 0;
 	fmt->altfm = 0;
 	fmt->pad = 0;
-	fmt->width = 0;
 	fmt->prec = 0;
 	fmt->length = 0;
 	fmt->modifier = 0;
@@ -132,18 +131,14 @@ int 	ft_putchar_fmt(void *c, t_fmt *fmt)
 	if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
 		return (0);
 	if (fmt->lajst)
-		ft_putwchar_fmt(*((wchar_t *)c));
+		ft_putwchar(*((wchar_t *)c));
 	while (fmt->length > 1)
 	{
 		write(1, " ", 1);
 		fmt->length--;
 	}
 	if (!fmt->lajst)
-		ft_putwchar_fmt(*((wchar_t *)c));
-	printf("\n");
-	printf("final1: %c\n", *((char *)c));
-	printf("final2: %d\n", fmt->modifier);
-	printf("----------------\n");
+		ft_putwchar(*((wchar_t *)c));
 	return (1);
 }
 
@@ -160,12 +155,26 @@ int		mod_charfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putchar_fmt((void *)(&c), fmt));
 }
 
-int 	ft_putstr_fmt(void *c, t_fmt fmt)
+int 	ft_putstr_fmt(void *c, t_fmt *fmt)
 {
-	printf("final1: %s\n", (char *)c);
-	printf("final2: %d\n", fmt.modifier);
-	printf("----------------\n");
-	return (1);
+	int 	to_print;
+	int 	spaces;
+	int 	len;
+
+	len = fmt->modifier == MOD_L ? ft_wstrlen(c) : ft_strlen(c);
+	to_print = fmt->prec ? (fmt->prec > len ? len : fmt->prec) : len;
+	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
+	len = to_print + spaces;
+	if (!fmt->lajst)
+		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
+	while (spaces)
+	{
+		write(1, " ", 1);
+		spaces--;
+	}
+	if (fmt->lajst)
+		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
+	return (len);
 }
 
 int		mod_strfmt(t_fmt *fmt, va_list *valist)
@@ -176,7 +185,7 @@ int		mod_strfmt(t_fmt *fmt, va_list *valist)
 		c = (wchar_t *)va_arg(*valist, wchar_t *);
 	else
 		c = (char *)va_arg(*valist, void *);
-	return (ft_putstr_fmt((void *)c, *fmt));
+	return (ft_putstr_fmt((void *)c, fmt));
 }
 
 int 	ft_putnbr_fmt(void *c, t_fmt fmt)
@@ -237,11 +246,40 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putnbr_fmt((void *)(&c), *fmt));
 }
 
-int 	ft_putptr_fmt(void *c, t_fmt fmt)
+void 	print_hex(unsigned char *c, int *first)
 {
-	printf("final1: %p\n", c);
-	printf("final2: %d\n", fmt.modifier);
-	printf("----------------\n");
+	if (!(*c) && *first)
+		return ;
+	else if ((!(*c / 16) && (*c % 16) && *first))
+	{
+		ft_putchar(HEX[*c % 16]);
+		*first = 0;
+	}
+	else
+	{
+		ft_putchar(HEX[*c / 16]);
+		ft_putchar(HEX[*c % 16]);
+	}
+}
+
+int 	ft_putptr_fmt(void *c, t_fmt *fmt)
+{
+	unsigned char 	*arr;
+	int 			i;
+	int 			first;
+
+	i = 0;
+	first = 1;
+	arr = (unsigned char *)&c;
+	ft_putstr("0x");
+	if (!(c))
+		ft_putchar('0');
+	while (i < (int)sizeof(c))
+	{
+		print_hex(&arr[sizeof(arr) - i - 1], &first);
+		i++;
+	}
+	printf("%d\n", fmt->prec);
 	return (1);
 }
 
@@ -250,7 +288,7 @@ int		mod_ptrfmt(t_fmt *fmt, va_list *valist)
 	void *c;
 
 	c = va_arg(*valist, void *);
-	return (ft_putptr_fmt(c, *fmt));
+	return (ft_putptr_fmt(c, fmt));
 }
 
 int 	print_arg(t_fmt *fmt, va_list *valist)
@@ -279,7 +317,6 @@ void 	print_struct(t_fmt fmt)
 	printf("space: %d\n", fmt.space);
 	printf("altfm: %d\n", fmt.altfm);
 	printf("pad: %d\n", fmt.pad);
-	printf("width: %d\n", fmt.width);
 	printf("prec: %d\n", fmt.prec);
 	printf("length: %d\n", fmt.length);
 	printf("modifier: %d\n", fmt.modifier);
@@ -298,7 +335,7 @@ int 	parse_arg(va_list *valist, const char **s)
 	get_length(&fmt, s, valist);
 	get_precision(&fmt, s, valist);
 	get_modifier(&fmt, s);
-	print_struct(fmt);
+	//print_struct(fmt);
 	fmt.type = **s;
 	len = print_arg(&fmt, valist);
 	(*s)++;
