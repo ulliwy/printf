@@ -246,30 +246,29 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putnbr_fmt((void *)(&c), *fmt));
 }
 
-void 	print_hex(unsigned char *arr, char *c)
+void 	get_hex(unsigned char *arr, char *c, int *first)
 {
-	int 			i;
-	int 			first;
-	int j = 2;
+	int		i;
+	int 	j;
 
 	i = (int)sizeof(arr) - 1;
-	first = 1;
+	j = 2;
 	c[0] = '0';
 	c[1] = 'x';
 	if (!(*arr))
 		c[j++] = '0';
 	while (*arr && i >= 0)
 	{
-		if (!(arr[i] / 16) && (arr[i] % 16) && first)
+		if (!(arr[i] / 16) && (arr[i] % 16) && *first)
 		{
 			c[j++] = HEX[arr[i] % 16];
-			first = 0;
+			*first = 0;
 		}
-		else if (((arr[i] / 16) && (arr[i] % 16)) || !first)
+		else if (((arr[i] / 16) && (arr[i] % 16)) || !(*first))
 		{
 			c[j++] = HEX[arr[i] / 16];
 			c[j++] = HEX[arr[i] % 16];
-			first = 0;
+			*first = 0;
 		}
 		i--;
 	}
@@ -281,10 +280,12 @@ int 	ft_putptr_fmt(void *c, t_fmt *fmt)
 	unsigned char 	*arr;
 	char *str;
 	int len;
+	int first;
 
+	first = 1;
 	arr = (unsigned char *)&c;
 	str = (char *)malloc((int)sizeof(arr) * 2 + 3);
-	print_hex(arr, str);
+	get_hex(arr, str, &first);
 	fmt->prec = 0;
 	len = ft_putstr_fmt(str, fmt);
 	free(str);

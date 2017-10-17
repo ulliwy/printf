@@ -24,14 +24,19 @@ int		main()
 	//int p = ft_printf("%% %c %0+7.4c");
 	//wchar_t k[] = L"µ©";
 	//char *l = "dddd©";
-	char i[] = "";
+	//char i[] = "0x7fff5768af";
+	//int len;
+	int n = 0;
 
 	//ft_printf("wide string: %-*ls\n", 7, k);
 	
 	//ft_printf("string1: %8.6s\n", l);
 	//printf("string2: %8.6s\n", l);
 
-	printf("ptr1: %-20p\n", i);	
-	ft_printf("ptr2: %-20.2p\n", i);
+	//printf("ptr1: %20p\n", i);	
+	//len = ft_printf("ptr2: %20p\n", i);
+	//printf("%d\n", len);
+
+	printf("%d\n", n);
 
 }
