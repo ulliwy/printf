@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/17 17:39:50 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/18 11:11:38 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,17 +193,47 @@ int		mod_strfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putstr_fmt((void *)c, fmt));
 }
 
-int		get_nbr_digits(long long int nbr)
+int		get_nbr_digits(long long int nbr, t_fmt *fmt)
 {
+	int div;
 	int length;
 
+	if (fmt->type == 'o' || fmt->type == 'O')
+		div = 8;
+	else if (fmt->type == 'x' || fmt->type == 'X')
+		div = 16;
+	else
+		div = 10;
 	length = 0;
 	if (nbr == 0)
 		length++;
-	while (nbr % 10 != 0)
+	while (nbr / div != 0)
 	{
 		length++;
-		nbr = nbr / 10;
+		nbr = nbr / div;
+	}
+	return (length);
+}
+
+int		get_unbr_digits(unsigned long long int nbr, t_fmt *fmt)
+{
+	int div;
+	int length;
+
+	if (fmt->type == 'o' || fmt->type == 'O')
+		div = 8;
+	else if (fmt->type == 'x' || fmt->type == 'X')
+		div = 16;
+	else
+		div = 10;
+	length = 0;
+	if (nbr == 0)
+		length++;
+	while (nbr != 0)
+	{
+		//printf("nbr: %llu\n", nbr);
+		length++;
+		nbr = nbr / div;
 	}
 	return (length);
 }
@@ -221,7 +251,7 @@ void	print_struct(t_fmt fmt)
 	printf("----\n");
 }
 
-void	print_digits(long long int nbr)
+void	print_digits(long long int nbr, int div, t_fmt *fmt)
 {
 	unsigned long long int	u_nb;
 
@@ -233,17 +263,53 @@ void	print_digits(long long int nbr)
 	}
 	if (nbr < 0)
 		u_nb = -u_nb;
-	if (u_nb >= 10)
+	if (u_nb >= (unsigned long long int)div)
 	{
-		print_digits(u_nb / 10);
-		ft_putchar(u_nb % 10 + '0');
+		print_digits(u_nb / div, div, fmt);
+		if (fmt->type == 'x')
+			ft_putchar(HEX[u_nb % div]);
+		else
+			ft_putchar(HEXC[u_nb % div]);
 	}
 	else
-		ft_putchar(u_nb + '0');
+		if (fmt->type == 'x')
+			ft_putchar(HEX[u_nb % div]);
+		else
+			ft_putchar(HEXC[u_nb % div]);
+}
+
+void	print_udigits(unsigned long long int nbr, int div, t_fmt *fmt)
+{
+	if (nbr == 0)
+	{
+		ft_putchar('0');
+		return ;
+	}
+	if (nbr >= (unsigned long long int)div)
+	{
+		print_digits(nbr / div, div, fmt);
+		if (fmt->type == 'x')
+			ft_putchar(HEX[nbr % div]);
+		else
+			ft_putchar(HEXC[nbr % div]);
+	}
+	else
+		if (fmt->type == 'x')
+			ft_putchar(HEX[nbr % div]);
+		else
+			ft_putchar(HEXC[nbr % div]);
 }
 
 void		print_nbr(long long int nbr, t_fmt *fmt, int digits, int zeroes)
 {
+	int div;
+
+	if (fmt->type == 'o' || fmt->type == 'O')
+		div = 8;
+	else if (fmt->type == 'x' || fmt->type == 'X')
+		div = 16;
+	else
+		div = 10;
 	if (nbr < 0 || fmt->sign || fmt->space)
 	{
 		if (nbr < 0)
@@ -256,7 +322,23 @@ void		print_nbr(long long int nbr, t_fmt *fmt, int digits, int zeroes)
 	while(zeroes--)
 		ft_putchar('0');
 	if (digits)
-		print_digits(nbr);
+		print_digits(nbr, div, fmt);
+}
+
+void		print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits, int zeroes)
+{
+	int div;
+
+	if (fmt->type == 'o' || fmt->type == 'O')
+		div = 8;
+	else if (fmt->type == 'x' || fmt->type == 'X')
+		div = 16;
+	else
+		div = 10;
+	while(zeroes--)
+		ft_putchar('0');
+	if (digits)
+		print_udigits(nbr, div, fmt);
 }
 
 int		ft_putnbr_fmt(void *c, t_fmt *fmt)
@@ -270,19 +352,48 @@ int		ft_putnbr_fmt(void *c, t_fmt *fmt)
 	sign = 0;
 	zeroes = 0;
 	nbr = *((long long int *)c);
-	digits = (fmt->is_prec && !nbr) ? 0 : get_nbr_digits(nbr);
+	digits = (fmt->is_prec && !nbr) ? 0 : get_nbr_digits(nbr, fmt);
 	if (nbr < 0 || fmt->sign || fmt->space)
 		sign++;
 	if (fmt->is_prec)
 		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
 	else if (fmt->pad)
 		zeroes = fmt->length > digits + sign ? fmt->length - digits - sign : 0;
-	spaces = fmt->length - digits - sign - zeroes;
+	spaces = fmt->length > digits - sign - zeroes ? fmt->length - digits - sign - zeroes : 0;
 	sign = spaces + sign + zeroes + digits;
 	if (!fmt->lajst)
 		while (spaces-- > 0)
 			ft_putchar(' ');
 	print_nbr(nbr, fmt, digits, zeroes);
+	if (fmt->lajst)
+		while (spaces-- > 0)
+			ft_putchar(' ');
+	return (sign);
+}
+
+int		ft_putunbr_fmt(void *c, t_fmt *fmt)
+{
+	unsigned long long int	nbr;
+	int						digits;
+	int						spaces;
+	int 					sign;
+	int 					zeroes;
+
+	zeroes = 0;
+	nbr = *((unsigned long long int *)c);
+	//printf("here 2: %llu\n", nbr);
+	digits = (fmt->is_prec && !nbr) ? 0 : get_unbr_digits(nbr, fmt);
+	//printf("digits %d\n", digits);
+	if (fmt->is_prec)
+		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
+	else if (fmt->pad)
+		zeroes = fmt->length > digits ? fmt->length - digits : 0;
+	spaces = fmt->length > digits - zeroes ? fmt->length - digits - zeroes : 0;
+	sign = spaces + zeroes + digits;
+	if (!fmt->lajst)
+		while (spaces-- > 0)
+			ft_putchar(' ');
+	print_unbr(nbr, fmt, digits, zeroes);
 	if (fmt->lajst)
 		while (spaces-- > 0)
 			ft_putchar(' ');
@@ -328,15 +439,25 @@ int		mod_uintfmt(t_fmt *fmt, va_list *valist)
 		c = (size_t)va_arg(*valist, unsigned long long int);
 	else
 		c = (unsigned int)va_arg(*valist, unsigned int);
-	return (ft_putnbr_fmt((void *)(&c), fmt));
+	//printf("here: %llu\n", c);
+	return (ft_putunbr_fmt((void *)(&c), fmt));
 }
 
 int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 {
 	long int c;
+	unsigned long int uc;
 
-	c = (long int)va_arg(*valist, long int);
-	return (ft_putnbr_fmt((void *)(&c), fmt));
+	if (fmt->type == 'D')
+	{
+		c = (long)va_arg(*valist, long long int);
+		return (ft_putnbr_fmt((void *)(&c), fmt));
+	}
+	else
+	{
+		uc = (unsigned long)va_arg(*valist, unsigned long long int);
+		return (ft_putunbr_fmt((void *)(&uc), fmt));
+	}
 }
 
 void	get_hex(unsigned char *arr, char *c, int *first)
@@ -397,19 +518,19 @@ int		print_arg(t_fmt *fmt, va_list *valist)
 {
 	if (fmt->type == '%')
 		return (mod_charfmt(fmt, valist));
-	else if (fmt->type == 'c' || fmt->type == 'C')
+	else if (fmt->type == 'c' || fmt->type == 'C') //done
 		return (mod_charfmt(fmt, valist));
-	else if (fmt->type == 's' || fmt->type == 'S')
+	else if (fmt->type == 's' || fmt->type == 'S') //done
 		return (mod_strfmt(fmt, valist));
-	else if (fmt->type == 'd' || fmt->type == 'i')
+	else if (fmt->type == 'd' || fmt->type == 'i') //done
 		return (mod_intfmt(fmt, valist));
 	else if (fmt->type == 'o' || fmt->type == 'u' || fmt->type == 'x'
 												|| fmt->type == 'X')
 		return (mod_uintfmt(fmt, valist));
 	else if (fmt->type == 'D' || fmt->type == 'O' || fmt->type == 'U')
 		return (mod_lintfmt(fmt, valist));
-	else if (fmt->type == 'p')
-		return (mod_ptrfmt(fmt, valist));
+	else if (fmt->type == 'p') //done
+		return (mod_ptrfmt(fmt, valist)); 
 	return (0);
 }
 

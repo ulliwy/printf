@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/17 16:35:01 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/18 10:39:42 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define MOD_Z			6
 
 # define HEX			"0123456789abcdef"
+# define HEXC			"0123456789ABCDEF"
 
 typedef struct 	s_out
 {

@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/17 17:37:47 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/18 11:10:18 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,51 +15,60 @@
 
 int		main()
 {
-	//int		a = 9;
-	//int c = 21474836479;
+	// int n1 = 0;
+	// int n2 = 889;
 
-	//ft_printf("number: %0+8d\n", 9);
-	//int c = 0xc2a7;
-	//printf("%d %d\n", 5);
-	//int p = ft_printf("%% %c %0+7.4c");
-	//wchar_t k[] = L"µ©";
-	//char *l = "dddd©";
-	//char i[] = "0x7fff5768af";
-	//int len;
-	int n1 = 0;
-	int n2 = 889;
+	// printf("%d: \n", printf("%.0d\n", n1));
+	// printf("%d: \n", ft_printf("%.0d\n", n1));
 
-	//ft_printf("wide string: %-*ls\n", 7, k);
-	
-	//ft_printf("string1: %8.6s\n", l);
-	//printf("string2: %8.6s\n", l);
+	// printf("%d: \n", printf("nbr1: \"%.0d\"\n", n1));
+	// printf("%d: \n", ft_printf("nbr2: \"%.0d\"\n", n1));
 
-	//printf("ptr1: %20p\n", i);	
-	//len = ft_printf("ptr2: %20p\n", i);
-	//printf("%d\n", len);
+	// printf("%d: \n", printf("nbr1: \"%d\"\n", n1));
+	// printf("%d: \n", ft_printf("nbr2: \"%d\"\n", n1));
 
-	printf("%d: \n", printf("%.0d\n", n1));
-	printf("%d: \n", ft_printf("%.0d\n", n1));
+	// printf("%d: \n", printf("nbr1: \"%4.0d\"\n", n1));
+	// printf("%d: \n", ft_printf("nbr2: \"%4.0d\"\n", n1));
 
-	printf("%d: \n", printf("nbr1: \"%.0d\"\n", n1));
-	printf("%d: \n", ft_printf("nbr2: \"%.0d\"\n", n1));
+	// printf("%d: \n", printf("nbr1: \"%+8.4d\"\n", n2));
+	// printf("%d: \n", ft_printf("nbr2: \"%+08.4d\"\n", n2));
 
-	printf("%d: \n", printf("nbr1: \"%d\"\n", n1));
-	printf("%d: \n", ft_printf("nbr2: \"%d\"\n", n1));
+	// printf("%d: \n", printf("nbr1: \"%+08d\"\n", n2));
+	// printf("%d: \n", ft_printf("nbr2: \"%+08d\"\n", n2));
 
-	printf("%d: \n", printf("nbr1: \"%4.0d\"\n", n1));
-	printf("%d: \n", ft_printf("nbr2: \"%4.0d\"\n", n1));
+	// printf("%d: \n", printf("nbr1: \"%+8d\"\n", n2));
+	// printf("%d: \n", ft_printf("nbr2: \"%+8d\"\n", n2));
 
-	printf("%d: \n", printf("nbr1: \"%+8.4d\"\n", n2));
-	printf("%d: \n", ft_printf("nbr2: \"%+08.4d\"\n", n2));
+	// printf("%d: \n", printf("nbr1: \"%-+8.4d\"\n", n2));
+	// printf("%d: \n", ft_printf("nbr2: \"%-+8.4d\"\n", n2));
 
-	printf("%d: \n", printf("nbr1: \"%+08d\"\n", n2));
-	printf("%d: \n", ft_printf("nbr2: \"%+08d\"\n", n2));
+	// int u1 = 0xabcd;
+	// long int u2 = 15;
+	// unsigned long u3 = 4294967295;
+	unsigned long u4 = -4294967295;
+	// unsigned long long u5 = -1;
 
-	printf("%d: \n", printf("nbr1: \"%+8d\"\n", n2));
-	printf("%d: \n", ft_printf("nbr2: \"%+8d\"\n", n2));
+	// printf("1: %d\n", u1);
+	// ft_printf("1: %d\n", u1);
 
-	printf("%d: \n", printf("nbr1: \"%-+8.4d\"\n", n2));
-	printf("%d: \n", ft_printf("nbr2: \"%-+8.4d\"\n", n2));
+	// printf("2: %x\n", u1);
+	// ft_printf("2: %x\n", u1);
 
+	// printf("3: %X\n", u1);
+	// ft_printf("3: %X\n", u1);
+
+	// printf("4: %010lX\n", u2);
+	// ft_printf("4: %010lX\n", u2);
+
+	// printf("5: %lu\n", u3);
+	// ft_printf("5: %lu\n", u3);
+
+	// printf("6: %lu\n", u4);
+	// ft_printf("6: %lu\n", u4);
+
+	// printf("7: %llu\n", u5);
+	// ft_printf("7: %llu\n", u5);
+
+	printf("7: %lO\n", u4);
+	ft_printf("7: %O\n", u4);
 }
