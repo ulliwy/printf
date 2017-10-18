@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/16 16:48:40 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/17 16:35:01 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct	s_fmt
 	int			altfm;	//'#'
 	int			pad;	//'0'
 	int			prec;	//precision
+	int			is_prec;
 	int			length;	//field length
 	int			modifier;
 	int 		type;

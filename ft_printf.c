@@ -6,17 +6,18 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/16 17:20:24 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/17 17:39:50 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include <stdio.h>
 
-int 	get_precision(t_fmt *fmt, const char **s, va_list *valist)
+int		get_precision(t_fmt *fmt, const char **s, va_list *valist)
 {
 	if (**s == '.')
 	{
+		fmt->is_prec = 1;
 		(*s)++;
 		if (ft_isdigit(**s))
 		{
@@ -35,7 +36,7 @@ int 	get_precision(t_fmt *fmt, const char **s, va_list *valist)
 	return (1);
 }
 
-int 		get_length(t_fmt *fmt, const char **s, va_list *valist)
+int		get_length(t_fmt *fmt, const char **s, va_list *valist)
 {
 	if (ft_isdigit(**s))
 	{
@@ -58,7 +59,7 @@ int 		get_length(t_fmt *fmt, const char **s, va_list *valist)
 	return (1);
 }
 
-void		fmt_init(t_fmt *fmt)
+void	fmt_init(t_fmt *fmt)
 {
 	fmt->lajst = 0;
 	fmt->sign = 0;
@@ -66,11 +67,12 @@ void		fmt_init(t_fmt *fmt)
 	fmt->altfm = 0;
 	fmt->pad = 0;
 	fmt->prec = 0;
+	fmt->is_prec = 0;
 	fmt->length = 0;
 	fmt->modifier = 0;
 }
 
-int 	arg_analyze(t_fmt *fmt)
+int		arg_analyze(t_fmt *fmt)
 {
 	if (fmt->lajst && fmt->space)
 		return (0);
@@ -79,7 +81,7 @@ int 	arg_analyze(t_fmt *fmt)
 	return (1);
 }
 
-int 	get_flags(t_fmt *fmt, const char **s)
+int		get_flags(t_fmt *fmt, const char **s)
 {
 	fmt_init(fmt);
 	while (1)
@@ -95,13 +97,13 @@ int 	get_flags(t_fmt *fmt, const char **s)
 		else if (**s == '0')
 			fmt->pad = 1;
 		else
-			break;
+			break ;
 		(*s)++;
 	}
 	return (arg_analyze(fmt));
 }
 
-int 	get_modifier(t_fmt *fmt, const char **s)
+int		get_modifier(t_fmt *fmt, const char **s)
 {
 	if (**s == 'h' && *(*s + 1) == 'h')
 	{
@@ -126,7 +128,7 @@ int 	get_modifier(t_fmt *fmt, const char **s)
 	return (1);
 }
 
-int 	ft_putchar_fmt(void *c, t_fmt *fmt)
+int		ft_putchar_fmt(void *c, t_fmt *fmt)
 {
 	if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
 		return (0);
@@ -144,7 +146,7 @@ int 	ft_putchar_fmt(void *c, t_fmt *fmt)
 
 int		mod_charfmt(t_fmt *fmt, va_list *valist)
 {
-	int 	c;
+	int		c;
 
 	if (fmt->type == 'c' && fmt->modifier == 0)
 		c = (unsigned char)va_arg(*valist, int);
@@ -155,31 +157,34 @@ int		mod_charfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putchar_fmt((void *)(&c), fmt));
 }
 
-int 	ft_putstr_fmt(void *c, t_fmt *fmt)
+int		ft_putstr_fmt(void *c, t_fmt *fmt)
 {
-	int 	to_print;
-	int 	spaces;
-	int 	len;
+	int		to_print;
+	int		spaces;
+	int		len;
 
 	len = fmt->modifier == MOD_L ? ft_wstrlen(c) : ft_strlen(c);
-	to_print = fmt->prec ? (fmt->prec > len ? len : fmt->prec) : len;
+	to_print = fmt->prec > len ? len : fmt->prec;
+	to_print = fmt->prec ? to_print : len;
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
 	len = to_print + spaces;
 	if (fmt->lajst)
-		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
+		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) :
+										ft_putnstr(c, to_print);
 	while (spaces)
 	{
 		write(1, " ", 1);
 		spaces--;
 	}
 	if (!fmt->lajst)
-		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) : ft_putnstr(c, to_print);
+		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) :
+										ft_putnstr(c, to_print);
 	return (len);
 }
 
 int		mod_strfmt(t_fmt *fmt, va_list *valist)
 {
-	void		*c;
+	void	*c;
 
 	if (fmt->type == 'S' || (fmt->type == 's' && fmt->modifier == MOD_L))
 		c = (wchar_t *)va_arg(*valist, wchar_t *);
@@ -188,12 +193,100 @@ int		mod_strfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putstr_fmt((void *)c, fmt));
 }
 
-int 	ft_putnbr_fmt(void *c, t_fmt fmt)
+int		get_nbr_digits(long long int nbr)
 {
-	printf("final1: %d\n", *((int *)c));
-	printf("final2: %d\n", fmt.modifier);
-	printf("----------------\n");
-	return (1);
+	int length;
+
+	length = 0;
+	if (nbr == 0)
+		length++;
+	while (nbr % 10 != 0)
+	{
+		length++;
+		nbr = nbr / 10;
+	}
+	return (length);
+}
+
+void	print_struct(t_fmt fmt)
+{
+	printf("lajst: %d\n", fmt.lajst);
+	printf("sign: %d\n", fmt.sign);
+	printf("space: %d\n", fmt.space);
+	printf("altfm: %d\n", fmt.altfm);
+	printf("pad: %d\n", fmt.pad);
+	printf("prec: %d\n", fmt.prec);
+	printf("length: %d\n", fmt.length);
+	printf("modifier: %d\n", fmt.modifier);
+	printf("----\n");
+}
+
+void	print_digits(long long int nbr)
+{
+	unsigned long long int	u_nb;
+
+	u_nb = (unsigned long long int)nbr;
+	if (u_nb == 0)
+	{
+		ft_putchar('0');
+		return ;
+	}
+	if (nbr < 0)
+		u_nb = -u_nb;
+	if (u_nb >= 10)
+	{
+		print_digits(u_nb / 10);
+		ft_putchar(u_nb % 10 + '0');
+	}
+	else
+		ft_putchar(u_nb + '0');
+}
+
+void		print_nbr(long long int nbr, t_fmt *fmt, int digits, int zeroes)
+{
+	if (nbr < 0 || fmt->sign || fmt->space)
+	{
+		if (nbr < 0)
+			write(1, "-", 1);
+		else if (fmt->sign)
+			write(1, "+", 1);
+		else if (fmt->space)
+			write(1, " ", 1);
+	}
+	while(zeroes--)
+		ft_putchar('0');
+	if (digits)
+		print_digits(nbr);
+}
+
+int		ft_putnbr_fmt(void *c, t_fmt *fmt)
+{
+	long long int	nbr;
+	int				digits;
+	int				spaces;
+	int 			sign;
+	int 			zeroes;
+
+	sign = 0;
+	zeroes = 0;
+	nbr = *((long long int *)c);
+	digits = (fmt->is_prec && !nbr) ? 0 : get_nbr_digits(nbr);
+	if (nbr < 0 || fmt->sign || fmt->space)
+		sign++;
+	if (fmt->is_prec)
+		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
+	else if (fmt->pad)
+		zeroes = fmt->length > digits + sign ? fmt->length - digits - sign : 0;
+	spaces = fmt->length - digits - sign - zeroes;
+	sign = spaces + sign + zeroes + digits;
+	if (!fmt->lajst)
+		while (spaces-- > 0)
+			ft_putchar(' ');
+	print_nbr(nbr, fmt, digits, zeroes);
+	if (fmt->lajst)
+		while (spaces-- > 0)
+			ft_putchar(' ');
+	return (sign);
 }
 
 int		mod_intfmt(t_fmt *fmt, va_list *valist)
@@ -214,7 +307,7 @@ int		mod_intfmt(t_fmt *fmt, va_list *valist)
 		c = (size_t)va_arg(*valist, long long int);
 	else
 		c = (int)va_arg(*valist, int);
-	return (ft_putnbr_fmt((void *)(&c), *fmt));
+	return (ft_putnbr_fmt((void *)(&c), fmt));
 }
 
 int		mod_uintfmt(t_fmt *fmt, va_list *valist)
@@ -235,7 +328,7 @@ int		mod_uintfmt(t_fmt *fmt, va_list *valist)
 		c = (size_t)va_arg(*valist, unsigned long long int);
 	else
 		c = (unsigned int)va_arg(*valist, unsigned int);
-	return (ft_putnbr_fmt((void *)(&c), *fmt));
+	return (ft_putnbr_fmt((void *)(&c), fmt));
 }
 
 int		mod_lintfmt(t_fmt *fmt, va_list *valist)
@@ -243,13 +336,13 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	long int c;
 
 	c = (long int)va_arg(*valist, long int);
-	return (ft_putnbr_fmt((void *)(&c), *fmt));
+	return (ft_putnbr_fmt((void *)(&c), fmt));
 }
 
-void 	get_hex(unsigned char *arr, char *c, int *first)
+void	get_hex(unsigned char *arr, char *c, int *first)
 {
 	int		i;
-	int 	j;
+	int		j;
 
 	i = (int)sizeof(arr) - 1;
 	j = 2;
@@ -275,12 +368,12 @@ void 	get_hex(unsigned char *arr, char *c, int *first)
 	c[j] = '\0';
 }
 
-int 	ft_putptr_fmt(void *c, t_fmt *fmt)
+int		ft_putptr_fmt(void *c, t_fmt *fmt)
 {
-	unsigned char 	*arr;
-	char *str;
-	int len;
-	int first;
+	unsigned char	*arr;
+	char			*str;
+	int				len;
+	int				first;
 
 	first = 1;
 	arr = (unsigned char *)&c;
@@ -300,41 +393,29 @@ int		mod_ptrfmt(t_fmt *fmt, va_list *valist)
 	return (ft_putptr_fmt(c, fmt));
 }
 
-int 	print_arg(t_fmt *fmt, va_list *valist)
+int		print_arg(t_fmt *fmt, va_list *valist)
 {
 	if (fmt->type == '%')
-	 	return (mod_charfmt(fmt, valist));
+		return (mod_charfmt(fmt, valist));
 	else if (fmt->type == 'c' || fmt->type == 'C')
-	 	return (mod_charfmt(fmt, valist));
+		return (mod_charfmt(fmt, valist));
 	else if (fmt->type == 's' || fmt->type == 'S')
-	 	return (mod_strfmt(fmt, valist));
+		return (mod_strfmt(fmt, valist));
 	else if (fmt->type == 'd' || fmt->type == 'i')
-	  	return (mod_intfmt(fmt, valist));
-	else if (fmt->type == 'o' || fmt->type == 'u' || fmt->type == 'x' || fmt->type == 'X')
-	 	return (mod_uintfmt(fmt, valist));
+		return (mod_intfmt(fmt, valist));
+	else if (fmt->type == 'o' || fmt->type == 'u' || fmt->type == 'x'
+												|| fmt->type == 'X')
+		return (mod_uintfmt(fmt, valist));
 	else if (fmt->type == 'D' || fmt->type == 'O' || fmt->type == 'U')
-	 	return (mod_lintfmt(fmt, valist));
+		return (mod_lintfmt(fmt, valist));
 	else if (fmt->type == 'p')
-	 	return (mod_ptrfmt(fmt, valist));
+		return (mod_ptrfmt(fmt, valist));
 	return (0);
 }
 
-void 	print_struct(t_fmt fmt)
+int		parse_arg(va_list *valist, const char **s)
 {
-	printf("lajst: %d\n", fmt.lajst);
-	printf("sign: %d\n", fmt.sign);
-	printf("space: %d\n", fmt.space);
-	printf("altfm: %d\n", fmt.altfm);
-	printf("pad: %d\n", fmt.pad);
-	printf("prec: %d\n", fmt.prec);
-	printf("length: %d\n", fmt.length);
-	printf("modifier: %d\n", fmt.modifier);
-	printf("----\n");	
-}
-
-int 	parse_arg(va_list *valist, const char **s)
-{
-	int 	len;
+	int		len;
 	t_fmt	fmt;
 
 	len = 0;
@@ -351,10 +432,10 @@ int 	parse_arg(va_list *valist, const char **s)
 	return (len);
 }
 
-int		ft_printf(const char* format, ...)
+int		ft_printf(const char *format, ...)
 {
 	va_list		valist;
-	int 		len;
+	int			len;
 
 	len = 0;
 	va_start(valist, format);
