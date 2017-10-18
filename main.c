@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/18 11:10:18 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/18 13:50:20 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,17 @@ int		main()
 	// int n1 = 0;
 	// int n2 = 889;
 
-	// printf("%d: \n", printf("%.0d\n", n1));
-	// printf("%d: \n", ft_printf("%.0d\n", n1));
+	// printf(" \"%d\" \n", printf("@moulitest: %#.0o", 0));
+	// printf(" \"%d\" \n", ft_printf("@moulitest: %#.0o", 0));
+
+	// printf(" \"%d\" \n", printf("%.10d", 4242));
+	// printf(" \"%d\" \n", ft_printf("%.10d", 4242));
+
+	printf(" \"%d\" \n", printf("@moulitest: %s", NULL));
+	printf(" \"%d\" \n", ft_printf("@moulitest: %s", NULL));
+
+	// printf(" \"%d\" \n", printf("%#-8x", 42));
+	// printf(" \"%d\" \n", ft_printf("%#-08x", 42));
 
 	// printf("%d: \n", printf("nbr1: \"%.0d\"\n", n1));
 	// printf("%d: \n", ft_printf("nbr2: \"%.0d\"\n", n1));
@@ -45,8 +54,13 @@ int		main()
 	// int u1 = 0xabcd;
 	// long int u2 = 15;
 	// unsigned long u3 = 4294967295;
-	unsigned long u4 = -4294967295;
+	// unsigned long u4 = -4294967295;
 	// unsigned long long u5 = -1;
+
+	// int k = printf("%#5x\n", 42);
+	// printf("ret1 = %d\n", k);
+	// k = ft_printf("%#5x\n", 42);
+	// printf("ret2 = %d\n", k);
 
 	// printf("1: %d\n", u1);
 	// ft_printf("1: %d\n", u1);
@@ -69,6 +83,6 @@ int		main()
 	// printf("7: %llu\n", u5);
 	// ft_printf("7: %llu\n", u5);
 
-	printf("7: %lO\n", u4);
-	ft_printf("7: %O\n", u4);
+	// printf("7: %lO\n", u4);
+	// ft_printf("7: %O\n", u4);
 }

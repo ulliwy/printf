@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/18 11:11:38 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/18 13:46:45 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,10 @@ void	fmt_init(t_fmt *fmt)
 
 int		arg_analyze(t_fmt *fmt)
 {
-	if (fmt->lajst && fmt->space)
-		return (0);
+	// if (fmt->lajst && fmt->space)
+	// 	return (0);
 	if (fmt->lajst && fmt->pad)
-		return (0);
+		fmt->pad = 0;
 	return (1);
 }
 
@@ -130,18 +130,23 @@ int		get_modifier(t_fmt *fmt, const char **s)
 
 int		ft_putchar_fmt(void *c, t_fmt *fmt)
 {
-	if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
-		return (0);
+	int ret;
+
+	ret = 0;
+	// if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
+	// 	return (0);
 	if (fmt->lajst)
 		ft_putwchar(*((wchar_t *)c));
 	while (fmt->length > 1)
 	{
 		write(1, " ", 1);
 		fmt->length--;
+		ret++;
 	}
+	//printf("here\n");
 	if (!fmt->lajst)
 		ft_putwchar(*((wchar_t *)c));
-	return (1);
+	return (ret + 1);
 }
 
 int		mod_charfmt(t_fmt *fmt, va_list *valist)
@@ -207,7 +212,7 @@ int		get_nbr_digits(long long int nbr, t_fmt *fmt)
 	length = 0;
 	if (nbr == 0)
 		length++;
-	while (nbr / div != 0)
+	while (nbr != 0)
 	{
 		length++;
 		nbr = nbr / div;
@@ -229,12 +234,17 @@ int		get_unbr_digits(unsigned long long int nbr, t_fmt *fmt)
 	length = 0;
 	if (nbr == 0)
 		length++;
+	if (fmt->altfm && (fmt->type == 'o' || fmt->type == 'O'))
+		length++;
+	if (nbr && fmt->altfm && (fmt->type == 'x' || fmt->type == 'X'))
+		length = length + 2;
 	while (nbr != 0)
 	{
 		//printf("nbr: %llu\n", nbr);
 		length++;
 		nbr = nbr / div;
 	}
+	//printf("len: %d\n", length);
 	return (length);
 }
 
@@ -335,6 +345,14 @@ void		print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits, int zeroes)
 		div = 16;
 	else
 		div = 10;
+	if (nbr && fmt->altfm && (fmt->type == 'o' || fmt->type == 'O'))
+		ft_putchar('0');
+
+	if (nbr && fmt->altfm && fmt->type == 'x')
+		ft_putstr("0x");
+	else if (nbr && fmt->altfm && fmt->type == 'X')
+		ft_putstr("0X");
+
 	while(zeroes--)
 		ft_putchar('0');
 	if (digits)
@@ -353,14 +371,16 @@ int		ft_putnbr_fmt(void *c, t_fmt *fmt)
 	zeroes = 0;
 	nbr = *((long long int *)c);
 	digits = (fmt->is_prec && !nbr) ? 0 : get_nbr_digits(nbr, fmt);
+	//printf("digits: %d\n", digits);
 	if (nbr < 0 || fmt->sign || fmt->space)
 		sign++;
 	if (fmt->is_prec)
 		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
 	else if (fmt->pad)
 		zeroes = fmt->length > digits + sign ? fmt->length - digits - sign : 0;
-	spaces = fmt->length > digits - sign - zeroes ? fmt->length - digits - sign - zeroes : 0;
+	spaces = fmt->length > digits + sign + zeroes ? fmt->length - digits - sign - zeroes : 0;
 	sign = spaces + sign + zeroes + digits;
+	//printf("digits: %d, spaces: %d, zeroes: %d\n", digits, spaces, zeroes);
 	if (!fmt->lajst)
 		while (spaces-- > 0)
 			ft_putchar(' ');
@@ -382,13 +402,20 @@ int		ft_putunbr_fmt(void *c, t_fmt *fmt)
 	zeroes = 0;
 	nbr = *((unsigned long long int *)c);
 	//printf("here 2: %llu\n", nbr);
+	//printf("here 2: %d\n", fmt->is_prec);
+	if (fmt->altfm && !nbr && !fmt->prec && (fmt->type == 'o' || fmt->type == 'O'))
+	{
+		fmt->prec = 1;
+	}
+
 	digits = (fmt->is_prec && !nbr) ? 0 : get_unbr_digits(nbr, fmt);
 	//printf("digits %d\n", digits);
 	if (fmt->is_prec)
 		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
 	else if (fmt->pad)
 		zeroes = fmt->length > digits ? fmt->length - digits : 0;
-	spaces = fmt->length > digits - zeroes ? fmt->length - digits - zeroes : 0;
+	spaces = fmt->length > digits + zeroes ? fmt->length - digits - zeroes : 0;
+	//printf("digits: %d, spaces: %d, zeroes: %d\n", digits, spaces, zeroes);
 	sign = spaces + zeroes + digits;
 	if (!fmt->lajst)
 		while (spaces-- > 0)
