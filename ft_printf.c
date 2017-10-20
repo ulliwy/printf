@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/18 13:46:45 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/19 17:02:01 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@ int		get_precision(t_fmt *fmt, const char **s, va_list *valist)
 		else if (**s == '*')
 		{
 			fmt->prec = va_arg(*valist, int);
+			if (fmt->prec < 0)
+			{
+				fmt->is_prec = 0;
+				fmt->prec = 0;
+			}
 			(*s)++;
 		}
 	}
@@ -38,23 +43,27 @@ int		get_precision(t_fmt *fmt, const char **s, va_list *valist)
 
 int		get_length(t_fmt *fmt, const char **s, va_list *valist)
 {
-	if (ft_isdigit(**s))
+	while (ft_isdigit(**s) || **s == '*')
 	{
-		while (ft_isdigit(**s))
+		fmt->length = 0;
+		if (ft_isdigit(**s))
 		{
-			fmt->length = 10 * fmt->length + (**s - '0');
+			while (ft_isdigit(**s))
+			{
+				fmt->length = 10 * fmt->length + (**s - '0');
+				(*s)++;
+			}
+		}
+		else if (**s == '*')
+		{
+			fmt->length = va_arg(*valist, int);
+			if (fmt->length < 0)
+			{
+				fmt->lajst = !fmt->lajst;
+				fmt->length = -fmt->length;
+			}
 			(*s)++;
 		}
-	}
-	else if (**s == '*')
-	{
-		fmt->length = va_arg(*valist, int);
-		if (fmt->length < 0)
-		{
-			fmt->lajst = !fmt->lajst;
-			fmt->length = -fmt->length;
-		}
-		(*s)++;
 	}
 	return (1);
 }
@@ -70,15 +79,6 @@ void	fmt_init(t_fmt *fmt)
 	fmt->is_prec = 0;
 	fmt->length = 0;
 	fmt->modifier = 0;
-}
-
-int		arg_analyze(t_fmt *fmt)
-{
-	// if (fmt->lajst && fmt->space)
-	// 	return (0);
-	if (fmt->lajst && fmt->pad)
-		fmt->pad = 0;
-	return (1);
 }
 
 int		get_flags(t_fmt *fmt, const char **s)
@@ -100,7 +100,9 @@ int		get_flags(t_fmt *fmt, const char **s)
 			break ;
 		(*s)++;
 	}
-	return (arg_analyze(fmt));
+	if (fmt->lajst && fmt->pad)
+		fmt->pad = 0;
+	return (1);
 }
 
 int		get_modifier(t_fmt *fmt, const char **s)
@@ -133,19 +135,26 @@ int		ft_putchar_fmt(void *c, t_fmt *fmt)
 	int ret;
 
 	ret = 0;
-	// if (fmt->sign || fmt->space || fmt->altfm || fmt->pad || fmt->prec)
-	// 	return (0);
 	if (fmt->lajst)
-		ft_putwchar(*((wchar_t *)c));
+	{
+		if (fmt->modifier != MOD_L)
+			ft_putchar(*((char *)c));
+		else
+			ft_putwchar(*((wchar_t *)c));
+	}
 	while (fmt->length > 1)
 	{
-		write(1, " ", 1);
+		write(1, &(fmt->pad), 1);
 		fmt->length--;
 		ret++;
 	}
-	//printf("here\n");
 	if (!fmt->lajst)
-		ft_putwchar(*((wchar_t *)c));
+	{
+		if (fmt->modifier != MOD_L)
+			ft_putchar(*((char *)c));
+		else
+			ft_putwchar(*((wchar_t *)c));
+	}
 	return (ret + 1);
 }
 
@@ -156,9 +165,16 @@ int		mod_charfmt(t_fmt *fmt, va_list *valist)
 	if (fmt->type == 'c' && fmt->modifier == 0)
 		c = (unsigned char)va_arg(*valist, int);
 	else if (fmt->type == 'C' || (fmt->type == 'c' && fmt->modifier == MOD_L))
+	{
+		fmt->modifier = MOD_L;
 		c = (wchar_t)va_arg(*valist, wint_t);
+	}
 	else
-		c = '%';
+		c = fmt->type;
+	if (fmt->pad)
+		fmt->pad = '0';
+	else
+		fmt->pad = ' ';
 	return (ft_putchar_fmt((void *)(&c), fmt));
 }
 
@@ -168,9 +184,18 @@ int		ft_putstr_fmt(void *c, t_fmt *fmt)
 	int		spaces;
 	int		len;
 
-	len = fmt->modifier == MOD_L ? ft_wstrlen(c) : ft_strlen(c);
+	if (!c && !fmt->is_prec)
+	{
+		ft_putstr("(null)");
+		return (6);
+	}
+	//printf("this: \"%S\"\n", (wchar_t *)c);
+	//printf("mod: %d\n", fmt->modifier == MOD_L);
+	len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c) : ft_strlen(c);
+	//printf("len: %d\n", len);
 	to_print = fmt->prec > len ? len : fmt->prec;
-	to_print = fmt->prec ? to_print : len;
+	//printf("to_print: %d\n", to_print);
+	to_print = fmt->is_prec ? to_print : len;
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
 	len = to_print + spaces;
 	if (fmt->lajst)
@@ -178,7 +203,7 @@ int		ft_putstr_fmt(void *c, t_fmt *fmt)
 										ft_putnstr(c, to_print);
 	while (spaces)
 	{
-		write(1, " ", 1);
+		write(1, &(fmt->pad), 1);
 		spaces--;
 	}
 	if (!fmt->lajst)
@@ -192,9 +217,16 @@ int		mod_strfmt(t_fmt *fmt, va_list *valist)
 	void	*c;
 
 	if (fmt->type == 'S' || (fmt->type == 's' && fmt->modifier == MOD_L))
-		c = (wchar_t *)va_arg(*valist, wchar_t *);
+	{
+		fmt->modifier = MOD_L;
+		c = (wchar_t *)va_arg(*valist, void *);
+	}
 	else
 		c = (char *)va_arg(*valist, void *);
+	if (fmt->pad)
+		fmt->pad = '0';
+	else
+		fmt->pad = ' ';
 	return (ft_putstr_fmt((void *)c, fmt));
 }
 
@@ -232,19 +264,17 @@ int		get_unbr_digits(unsigned long long int nbr, t_fmt *fmt)
 	else
 		div = 10;
 	length = 0;
-	if (nbr == 0)
-		length++;
-	if (fmt->altfm && (fmt->type == 'o' || fmt->type == 'O'))
+	if (nbr == 0 || (fmt->altfm && (fmt->type == 'o' || fmt->type == 'O')))
 		length++;
 	if (nbr && fmt->altfm && (fmt->type == 'x' || fmt->type == 'X'))
 		length = length + 2;
+	//printf("len: %d\n", length);
 	while (nbr != 0)
 	{
 		//printf("nbr: %llu\n", nbr);
 		length++;
 		nbr = nbr / div;
 	}
-	//printf("len: %d\n", length);
 	return (length);
 }
 
@@ -487,17 +517,21 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	}
 }
 
-void	get_hex(unsigned char *arr, char *c, int *first)
+void	get_hex(unsigned char *arr, char *c, int *first, t_fmt *fmt)
 {
 	int		i;
 	int		j;
 
+	//printf("%d\n", *arr);
 	i = (int)sizeof(arr) - 1;
+	//printf("%d\n", i);
 	j = 2;
 	c[0] = '0';
 	c[1] = 'x';
-	if (!(*arr))
+	if (!(*arr) && !(fmt->is_prec && !fmt->prec))
 		c[j++] = '0';
+	if (fmt->is_prec && !fmt->prec)
+		fmt->prec = 2;
 	while (*arr && i >= 0)
 	{
 		if (!(arr[i] / 16) && (arr[i] % 16) && *first)
@@ -526,8 +560,11 @@ int		ft_putptr_fmt(void *c, t_fmt *fmt)
 	first = 1;
 	arr = (unsigned char *)&c;
 	str = (char *)malloc((int)sizeof(arr) * 2 + 3);
-	get_hex(arr, str, &first);
-	fmt->prec = 0;
+	get_hex(arr, str, &first, fmt);
+	//printf("%s\n", str);
+	//fmt->prec = 0;
+	//fmt->modifier = 0;
+	//printf("here: %s\n", str);
 	len = ft_putstr_fmt(str, fmt);
 	free(str);
 	return (len);
@@ -538,13 +575,17 @@ int		mod_ptrfmt(t_fmt *fmt, va_list *valist)
 	void *c;
 
 	c = va_arg(*valist, void *);
+	if (fmt->pad)
+		fmt->pad = '0';
+	else
+		fmt->pad = ' ';
 	return (ft_putptr_fmt(c, fmt));
 }
 
 int		print_arg(t_fmt *fmt, va_list *valist)
 {
-	if (fmt->type == '%')
-		return (mod_charfmt(fmt, valist));
+	if (!fmt->type)
+		return (-1);
 	else if (fmt->type == 'c' || fmt->type == 'C') //done
 		return (mod_charfmt(fmt, valist));
 	else if (fmt->type == 's' || fmt->type == 'S') //done
@@ -557,8 +598,8 @@ int		print_arg(t_fmt *fmt, va_list *valist)
 	else if (fmt->type == 'D' || fmt->type == 'O' || fmt->type == 'U')
 		return (mod_lintfmt(fmt, valist));
 	else if (fmt->type == 'p') //done
-		return (mod_ptrfmt(fmt, valist)); 
-	return (0);
+		return (mod_ptrfmt(fmt, valist));
+	return (mod_charfmt(fmt, valist));
 }
 
 int		parse_arg(va_list *valist, const char **s)
@@ -567,7 +608,9 @@ int		parse_arg(va_list *valist, const char **s)
 	t_fmt	fmt;
 
 	len = 0;
+	//printf("\"%s\"\n", *s);
 	(*s)++;
+	//printf("\"%s\"\n", *s);
 	if (!get_flags(&fmt, s))
 		return (0);
 	get_length(&fmt, s, valist);
@@ -575,7 +618,12 @@ int		parse_arg(va_list *valist, const char **s)
 	get_modifier(&fmt, s);
 	//print_struct(fmt);
 	fmt.type = **s;
-	len = print_arg(&fmt, valist);
+	//printf("type: \"%d\"\n", fmt.type);
+	if ((len = print_arg(&fmt, valist)) == -1)
+	{
+		len = 0;
+		(*s)--;
+	}
 	(*s)++;
 	return (len);
 }
@@ -584,6 +632,7 @@ int		ft_printf(const char *format, ...)
 {
 	va_list		valist;
 	int			len;
+	int			temp;
 
 	len = 0;
 	va_start(valist, format);
@@ -596,7 +645,16 @@ int		ft_printf(const char *format, ...)
 			len++;
 		}
 		else
-			len += parse_arg(&valist, &format);
+		{
+			temp = parse_arg(&valist, &format);
+			if (temp == -1)
+			{
+				len = -1;
+				break;
+			}
+			else
+				len += temp;
+		}
 	}
 	va_end(valist);
 	return (len);

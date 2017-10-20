@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 14:41:47 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/16 14:43:12 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/19 16:58:30 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,10 @@
 
 size_t	ft_wstrlen(const wchar_t *str)
 {
-	int counter;
+	const wchar_t	*counter;
 
-	counter = 0;
-	while (*str)
-	{
+	counter = str;
+	while (str && *counter)
 		counter++;
-		str++;
-	}
-	return (counter);
+	return (counter - str);
 }

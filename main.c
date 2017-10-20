@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/18 13:50:20 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/19 17:05:44 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,28 @@ int		main()
 	// printf(" \"%d\" \n", printf("@moulitest: %#.0o", 0));
 	// printf(" \"%d\" \n", ft_printf("@moulitest: %#.0o", 0));
 
-	// printf(" \"%d\" \n", printf("%.10d", 4242));
-	// printf(" \"%d\" \n", ft_printf("%.10d", 4242));
+	// printf(" \"%d\" \n", printf("{%-3Zoooo}", 123));
+	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
 
-	printf(" \"%d\" \n", printf("@moulitest: %s", NULL));
-	printf(" \"%d\" \n", ft_printf("@moulitest: %s", NULL));
+	printf(" \"%d\" \n", printf("{%05.%}", 0));
+	printf(" \"%d\" \n", ft_printf("{%05.%}", 0));
+
+	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
+	
+	// printf(" \"%d\" \n", printf("% Zoooo"));
+	// printf(" \"%d\" \n", ft_printf("% Zoooo"));
+
+	// printf(" \"%d\" \n", printf("%C", L'🍌'));
+	// printf(" \"%d\" \n", ft_printf("%c", L'🍌'));
+
+	// printf(" \"%d\" \n", printf("%S", L"Á±≥"));
+	// printf(" \"%d\" \n", ft_printf("%S", L"Á±≥"));
+
+	// printf(" \"%d\" \n", printf("{%S}", L"(null)"));
+	// printf(" \"%d\" \n", ft_printf("{% S}", L"(null)"));
+
+	// printf(" \"%d\" \n", printf("%S", L"zß水🍌"));
+	// printf(" \"%d\" \n", ft_printf("%S", L"zß水🍌"));
 
 	// printf(" \"%d\" \n", printf("%#-8x", 42));
 	// printf(" \"%d\" \n", ft_printf("%#-08x", 42));
