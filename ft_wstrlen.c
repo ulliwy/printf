@@ -14,10 +14,22 @@
 
 size_t	ft_wstrlen(const wchar_t *str)
 {
-	const wchar_t	*counter;
+	unsigned int	c;
+	unsigned long	*counter;
 
-	counter = str;
-	while (str && *counter)
-		counter++;
-	return (counter - str);
+	counter = 0;
+	while (str && *str)
+	{
+		c = (unsigned int)(*str);
+		if (c <= 0x7F)
+			counter++;
+		else if (c <= 0x7FF)
+			counter += 2;
+		else if (c <= 0x7FFFF)
+			counter += 3;
+		else if (c <= 0x10FFFF)
+			counter += 4;
+		str++;
+	}
+	return (counter);
 }

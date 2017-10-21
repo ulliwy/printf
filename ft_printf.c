@@ -138,9 +138,12 @@ int		ft_putchar_fmt(void *c, t_fmt *fmt)
 	if (fmt->lajst)
 	{
 		if (fmt->modifier != MOD_L)
+		{
 			ft_putchar(*((char *)c));
+			ret++;
+		}
 		else
-			ft_putwchar(*((wchar_t *)c));
+			ret += ft_putwchar(*((wchar_t *)c));
 	}
 	while (fmt->length > 1)
 	{
@@ -151,11 +154,14 @@ int		ft_putchar_fmt(void *c, t_fmt *fmt)
 	if (!fmt->lajst)
 	{
 		if (fmt->modifier != MOD_L)
+		{
 			ft_putchar(*((char *)c));
+			ret++;
+		}
 		else
-			ft_putwchar(*((wchar_t *)c));
+			ret += ft_putwchar(*((wchar_t *)c));
 	}
-	return (ret + 1);
+	return (ret);
 }
 
 int		mod_charfmt(t_fmt *fmt, va_list *valist)
@@ -192,23 +198,39 @@ int		ft_putstr_fmt(void *c, t_fmt *fmt)
 	//printf("this: \"%S\"\n", (wchar_t *)c);
 	//printf("mod: %d\n", fmt->modifier == MOD_L);
 	len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c) : ft_strlen(c);
-	//printf("len: %d\n", len);
+	printf("len: %d\n", len);
 	to_print = fmt->prec > len ? len : fmt->prec;
 	//printf("to_print: %d\n", to_print);
 	to_print = fmt->is_prec ? to_print : len;
+	printf("to_print: %d\n", to_print);
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
-	len = to_print + spaces;
+	len = spaces;
+	printf("spaces: %d\n", spaces);
 	if (fmt->lajst)
-		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) :
-										ft_putnstr(c, to_print);
+	{
+		if (fmt->modifier != MOD_L)
+		{
+			len += to_print;
+			ft_putnstr(c, to_print);
+		}
+		else
+			len += ft_putnwstr(c, to_print);
+	}
 	while (spaces)
 	{
 		write(1, &(fmt->pad), 1);
 		spaces--;
 	}
 	if (!fmt->lajst)
-		fmt->modifier == MOD_L ? ft_putnwstr(c, to_print) :
-										ft_putnstr(c, to_print);
+	{
+		if (fmt->modifier != MOD_L)
+		{
+			len += to_print;
+			ft_putnstr(c, to_print);
+		}
+		else
+			len += ft_putnwstr(c, to_print);
+	}
 	return (len);
 }
 

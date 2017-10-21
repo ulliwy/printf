@@ -12,6 +12,7 @@
 
 #include "ft_printf.h"
 #include <stdio.h>
+#include <locale.h>
 
 int		main()
 {
@@ -23,9 +24,10 @@ int		main()
 
 	// printf(" \"%d\" \n", printf("{%-3Zoooo}", 123));
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
+	setlocale(LC_ALL, "en_US.UTF-8");
 
-	printf(" \"%d\" \n", printf("{%05.%}", 0));
-	printf(" \"%d\" \n", ft_printf("{%05.%}", 0));
+	printf(" \"%d\" \n", printf("%15.4S", L"我是一只猫。"));
+	printf(" \"%d\" \n", ft_printf("%15.4S", L"我是一只猫。"));
 
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
 	
@@ -41,8 +43,8 @@ int		main()
 	// printf(" \"%d\" \n", printf("{%S}", L"(null)"));
 	// printf(" \"%d\" \n", ft_printf("{% S}", L"(null)"));
 
-	// printf(" \"%d\" \n", printf("%S", L"zß水🍌"));
-	// printf(" \"%d\" \n", ft_printf("%S", L"zß水🍌"));
+	//printf(" \"%d\" \n", printf("%S", L"zß水🍌"));
+	//printf(" \"%d\" \n", ft_printf("%S", L"zß水🍌"));
 
 	// printf(" \"%d\" \n", printf("%#-8x", 42));
 	// printf(" \"%d\" \n", ft_printf("%#-08x", 42));

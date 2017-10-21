@@ -12,20 +12,28 @@
 
 #include "ft_printf.h"
 
-int		ft_putwchar(wchar_t c)
+int		ft_putwchar(wchar_t _c)
 {
+	unsigned int	c;
+
+	c = (unsigned int)_c;
 	if (c <= 0x7F)
+	{
 		ft_putchar(c);
+		return (1);
+	}
 	else if (c <= 0x7FF)
 	{
 		ft_putchar((c >> 6) + 192);
 		ft_putchar((c & 63) + 128);
+		return (2);
 	}
 	else if (c <= 0x7FFFF)
 	{
 		ft_putchar((c >> 12) + 224);
 		ft_putchar(((c >> 6) & 63) + 128);
 		ft_putchar((c & 63) + 128);
+		return (3);
 	}
 	else if (c <= 0x10FFFF)
 	{
@@ -33,8 +41,7 @@ int		ft_putwchar(wchar_t c)
 		ft_putchar(((c >> 12) & 63) + 128);
 		ft_putchar(((c >> 6) & 63) + 128);
 		ft_putchar((c & 63) + 128);
+		return (4);
 	}
-	else
-		return (0);
-	return (1);
+	return (0);
 }

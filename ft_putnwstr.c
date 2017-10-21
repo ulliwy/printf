@@ -12,18 +12,27 @@
 
 #include "ft_printf.h"
 
-int		ft_putnwstr(wchar_t *c, int n)
+int		ft_putnwstr(wchar_t *str, int n)
 {
 	int 	count;
+	int		current;
+	unsigned int c;
 
 	count = 0;
-	if (c)
-		while (*c && n)
+	if (str)
+	{
+		while (*str && n > 0)
 		{
-			ft_putwchar(*c);
-			c++;
-			n--;
-			count++;
+			c = (unsigned int)(*str);
+			if ((c > 0x7F && c <= 0x7FF && n < 2) ||
+				(c > 0x7FF && c <= 0x7FFFF && n < 3) ||
+				(c > 0x7FFFF && c <= 0x10FFFF && n < 4))
+				return (count);
+			current = ft_putwchar(c);
+			count += current;
+			str++;
+			n -= current;
 		}
+	}
 	return (count);
 }	
