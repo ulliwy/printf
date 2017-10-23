@@ -12,23 +12,32 @@
 
 #include "ft_printf.h"
 
-size_t	ft_wstrlen(const wchar_t *str)
+size_t	ft_wstrlen(const wchar_t *str, t_fmt *fmt)
 {
 	unsigned int	c;
-	unsigned long	*counter;
+	unsigned long	counter;
+	unsigned long	current;
+	int limit;
 
 	counter = 0;
+	limit = 0;
 	while (str && *str)
 	{
 		c = (unsigned int)(*str);
 		if (c <= 0x7F)
-			counter++;
+			current = 1;
 		else if (c <= 0x7FF)
-			counter += 2;
+			current = 2;
 		else if (c <= 0x7FFFF)
-			counter += 3;
+			current = 3;
 		else if (c <= 0x10FFFF)
-			counter += 4;
+			current = 4;
+		if (!limit && fmt->is_prec && (int)(counter + current) > fmt->prec)
+		{
+			fmt->prec = counter;
+			limit = 1;
+		}
+		counter += current;
 		str++;
 	}
 	return (counter);

@@ -52,7 +52,7 @@ typedef struct	s_fmt
 int				ft_printf(const char* format, ...);
 
 int				ft_putwchar(wchar_t c);
-size_t			ft_wstrlen(const wchar_t *str);
+size_t			ft_wstrlen(const wchar_t *str, t_fmt *fmt);
 int				ft_putnstr(char *c, int n);
 int				ft_putnwstr(wchar_t *c, int n);
 

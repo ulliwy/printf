@@ -197,15 +197,15 @@ int		ft_putstr_fmt(void *c, t_fmt *fmt)
 	}
 	//printf("this: \"%S\"\n", (wchar_t *)c);
 	//printf("mod: %d\n", fmt->modifier == MOD_L);
-	len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c) : ft_strlen(c);
-	printf("len: %d\n", len);
+	len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c, fmt) : ft_strlen(c);
+	//printf("len: %d\n", len);
 	to_print = fmt->prec > len ? len : fmt->prec;
 	//printf("to_print: %d\n", to_print);
 	to_print = fmt->is_prec ? to_print : len;
-	printf("to_print: %d\n", to_print);
+	//printf("to_print: %d\n", to_print);
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
 	len = spaces;
-	printf("spaces: %d\n", spaces);
+	//printf("spaces: %d\n", spaces);
 	if (fmt->lajst)
 	{
 		if (fmt->modifier != MOD_L)

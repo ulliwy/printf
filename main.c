@@ -26,8 +26,8 @@ int		main()
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
 	setlocale(LC_ALL, "en_US.UTF-8");
 
-	printf(" \"%d\" \n", printf("%15.4S", L"我是一只猫。"));
-	printf(" \"%d\" \n", ft_printf("%15.4S", L"我是一只猫。"));
+	printf(" \"%d\" \n", printf("{%#.5x}", 1));
+	printf(" \"%d\" \n", ft_printf("{%#.5x}", 1));
 
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
 	
