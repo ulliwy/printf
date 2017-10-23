@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/19 17:02:01 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/23 16:09:19 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -572,23 +572,51 @@ void	get_hex(unsigned char *arr, char *c, int *first, t_fmt *fmt)
 	c[j] = '\0';
 }
 
+int 	get_ptr_len(unsigned char *arr)
+{
+	int count;
+	int i;
+	int first;
+
+	count = 0;
+	first = 1;
+	i = (int)sizeof(arr) - 1;
+	while (*arr && i >= 0)
+	{
+		if (!(arr[i] / 16) && (arr[i] % 16) && first)
+		{
+			count++;
+			first = 0;
+		}
+		else if (((arr[i] / 16) && (arr[i] % 16)) || !(first))
+		{
+			count = count + 2;
+			first = 0;
+		}
+		i--;
+	}
+	return (count);
+}
+
 int		ft_putptr_fmt(void *c, t_fmt *fmt)
 {
 	unsigned char	*arr;
-	char			*str;
 	int				len;
 	int				first;
+	int 			z;
 
 	first = 1;
 	arr = (unsigned char *)&c;
-	str = (char *)malloc((int)sizeof(arr) * 2 + 3);
-	get_hex(arr, str, &first, fmt);
+	len = get_ptr_len(arr);
+	if (fmt->is_prec)
+		z = fmt->prec > len ? fmt->prec - len : 0;
+
+	//printf("len: %d\n", len);
+	//get_hex(arr, str, &first, fmt);
 	//printf("%s\n", str);
 	//fmt->prec = 0;
 	//fmt->modifier = 0;
 	//printf("here: %s\n", str);
-	len = ft_putstr_fmt(str, fmt);
-	free(str);
 	return (len);
 }
 

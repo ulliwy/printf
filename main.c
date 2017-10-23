@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/19 17:05:44 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/23 16:10:47 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,21 @@ int		main()
 
 	// printf(" \"%d\" \n", printf("{%-3Zoooo}", 123));
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
-	setlocale(LC_ALL, "en_US.UTF-8");
+	// setlocale(LC_ALL, "en_US.UTF-8");
 
-	printf(" \"%d\" \n", printf("{%#.5x}", 1));
-	printf(" \"%d\" \n", ft_printf("{%#.5x}", 1));
+	//printf(" \"%d\" \n", printf("{%#.5x}", 1));
+	//printf(" \"%d\" \n", ft_printf("{%#.5x}", 1));
 
 	// printf(" \"%d\" \n", ft_printf("{%-15Z}", 123));
 	
-	// printf(" \"%d\" \n", printf("% Zoooo"));
-	// printf(" \"%d\" \n", ft_printf("% Zoooo"));
+	// printf("\"%d\" \n", printf("here: %d, 876876876%lc\n", 5, L'水'));
+	// printf(" \"%d\" \n", ft_printf("here: %d, 876876876%lc\n", 5, L'水'));
 
-	// printf(" \"%d\" \n", printf("%C", L'🍌'));
-	// printf(" \"%d\" \n", ft_printf("%c", L'🍌'));
+	// printf(" \"%d\" \n", printf("%lp", 42));
+	// printf(" \"%d\" \n", ft_printf("%lp", 42));
+
+	printf(" \"%d\" \n", printf("{%10.5p}", 1));
+	printf(" \"%d\" \n", ft_printf("{%10.5p}", 1));
 
 	// printf(" \"%d\" \n", printf("%S", L"Á±≥"));
 	// printf(" \"%d\" \n", ft_printf("%S", L"Á±≥"));
@@ -43,8 +46,8 @@ int		main()
 	// printf(" \"%d\" \n", printf("{%S}", L"(null)"));
 	// printf(" \"%d\" \n", ft_printf("{% S}", L"(null)"));
 
-	//printf(" \"%d\" \n", printf("%S", L"zß水🍌"));
-	//printf(" \"%d\" \n", ft_printf("%S", L"zß水🍌"));
+	// printf(" \"%d\" \n", printf("%s", "zß水🍌"));
+	// printf(" \"%d\" \n", ft_printf("%S", "zß水🍌"));
 
 	// printf(" \"%d\" \n", printf("%#-8x", 42));
 	// printf(" \"%d\" \n", ft_printf("%#-08x", 42));
