@@ -404,7 +404,6 @@ void		print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits, int zeroes)
 		ft_putstr("0x");
 	else if (nbr && fmt->altfm && fmt->type == 'X')
 		ft_putstr("0X");
-
 	while(zeroes--)
 		ft_putchar('0');
 	if (digits)
@@ -467,6 +466,12 @@ int		ft_putunbr_fmt(void *c, t_fmt *fmt)
 	else if (fmt->pad)
 		zeroes = fmt->length > digits ? fmt->length - digits : 0;
 	spaces = fmt->length > digits + zeroes ? fmt->length - digits - zeroes : 0;
+	//printf("%d\n", fmt->altfm);
+	if (fmt->is_prec && fmt->prec && fmt->altfm && fmt->type == 'x')
+	{
+		zeroes = zeroes + 2;
+		spaces = spaces - 2 > 0 ? spaces - 2 : 0;
+	}
 	//printf("digits: %d, spaces: %d, zeroes: %d\n", digits, spaces, zeroes);
 	sign = spaces + zeroes + digits;
 	if (!fmt->lajst)
@@ -539,40 +544,36 @@ int		mod_lintfmt(t_fmt *fmt, va_list *valist)
 	}
 }
 
-void	get_hex(unsigned char *arr, char *c, int *first, t_fmt *fmt)
+void	get_hex(unsigned char *arr, t_fmt *fmt)
 {
 	int		i;
-	int		j;
+	int 	first;
 
 	//printf("%d\n", *arr);
+	first = 1;
 	i = (int)sizeof(arr) - 1;
-	//printf("%d\n", i);
-	j = 2;
-	c[0] = '0';
-	c[1] = 'x';
-	if (!(*arr) && !(fmt->is_prec && !fmt->prec))
-		c[j++] = '0';
-	if (fmt->is_prec && !fmt->prec)
-		fmt->prec = 2;
-	while (*arr && i >= 0)
+	while (i >= 0)
 	{
-		if (!(arr[i] / 16) && (arr[i] % 16) && *first)
+		//printf("here\n");
+		if (!(arr[i] / 16) && (arr[i] % 16) && first)
 		{
-			c[j++] = HEX[arr[i] % 16];
-			*first = 0;
+			ft_putchar(HEX[arr[i] % 16]);
+			first = 0;
 		}
-		else if (((arr[i] / 16) && (arr[i] % 16)) || !(*first))
+		else if (((arr[i] / 16) && (arr[i] % 16)) || !(first))
 		{
-			c[j++] = HEX[arr[i] / 16];
-			c[j++] = HEX[arr[i] % 16];
-			*first = 0;
+			ft_putchar(HEX[arr[i] / 16]);
+			ft_putchar(HEX[arr[i] % 16]);
+			first = 0;
 		}
+		//printf("%d\n", first);
 		i--;
 	}
-	c[j] = '\0';
+	if (first && !(fmt->is_prec && !fmt->prec))
+	 	ft_putchar('0');
 }
 
-int 	get_ptr_len(unsigned char *arr)
+int 	get_ptr_len(unsigned char *arr, t_fmt *fmt)
 {
 	int count;
 	int i;
@@ -581,7 +582,7 @@ int 	get_ptr_len(unsigned char *arr)
 	count = 0;
 	first = 1;
 	i = (int)sizeof(arr) - 1;
-	while (*arr && i >= 0)
+	while (i >= 0)
 	{
 		if (!(arr[i] / 16) && (arr[i] % 16) && first)
 		{
@@ -595,6 +596,9 @@ int 	get_ptr_len(unsigned char *arr)
 		}
 		i--;
 	}
+	//printf("%d\n", first);
+	if (first && !(fmt->is_prec && !fmt->prec))
+	 	return (1);
 	return (count);
 }
 
@@ -602,22 +606,43 @@ int		ft_putptr_fmt(void *c, t_fmt *fmt)
 {
 	unsigned char	*arr;
 	int				len;
-	int				first;
 	int 			z;
+	int 			count;
+	int 			pad;
 
-	first = 1;
 	arr = (unsigned char *)&c;
-	len = get_ptr_len(arr);
+	len = get_ptr_len(arr, fmt);
+	//printf("len: %d\n", len);
+	z = 0;
 	if (fmt->is_prec)
 		z = fmt->prec > len ? fmt->prec - len : 0;
-
-	//printf("len: %d\n", len);
-	//get_hex(arr, str, &first, fmt);
-	//printf("%s\n", str);
-	//fmt->prec = 0;
-	//fmt->modifier = 0;
-	//printf("here: %s\n", str);
-	return (len);
+	//printf("z: %d\n", z);
+	count = len + z;
+	if (fmt->length > z + len + 2)
+		fmt->length = fmt->length - z - len - 2;
+	else
+		fmt->length = 0;
+	pad = fmt->length;
+	//printf("length: %d\n", fmt->length);
+	count = count + fmt->length + 2;
+	while (!fmt->lajst && fmt->length && fmt->pad != '0')
+	{
+		ft_putchar(fmt->pad);
+		fmt->length--;
+	}
+	write(1, "0x", 2);
+	//printf("pad: %d\n", pad);
+	while (!fmt->is_prec && fmt->pad == '0' && pad--)
+		ft_putchar('0');
+	while (z--)
+		ft_putchar('0');
+	get_hex(arr, fmt);
+	while (fmt->lajst && fmt->length)
+	{
+		ft_putchar(fmt->pad);
+		fmt->length--;
+	}
+	return (count);
 }
 
 int		mod_ptrfmt(t_fmt *fmt, va_list *valist)

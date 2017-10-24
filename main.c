@@ -34,11 +34,23 @@ int		main()
 	// printf("\"%d\" \n", printf("here: %d, 876876876%lc\n", 5, L'水'));
 	// printf(" \"%d\" \n", ft_printf("here: %d, 876876876%lc\n", 5, L'水'));
 
-	// printf(" \"%d\" \n", printf("%lp", 42));
-	// printf(" \"%d\" \n", ft_printf("%lp", 42));
+	printf(" \"%d\" \n", printf("{%#0.4x}", 1));
+	printf(" \"%d\" \n", ft_printf("{%#0.4x}", 1));
 
-	printf(" \"%d\" \n", printf("{%10.5p}", 1));
-	printf(" \"%d\" \n", ft_printf("{%10.5p}", 1));
+	// printf(" \"%d\" \n", printf("%p", 0x1047d6500));
+	// printf(" \"%d\" \n", ft_printf("%p", 0x1047d6500));
+
+	// printf(" \"%d\" \n", printf("{%5p}", 0));
+	// printf(" \"%d\" \n", ft_printf("{%5p}", 0));
+
+	// printf(" \"%d\" \n", printf("%2.9p", 1234));
+	// printf(" \"%d\" \n", ft_printf("%2.9p", 1234));
+
+	// printf(" \"%d\" \n", printf("{%3*p}", 10, 0));
+	// printf(" \"%d\" \n", ft_printf("{%3*p}", 10, 0));
+
+	// printf(" \"%d\" \n", printf("{%05p}", 1));
+	// printf(" \"%d\" \n", ft_printf("{%05p}", 1));
 
 	// printf(" \"%d\" \n", printf("%S", L"Á±≥"));
 	// printf(" \"%d\" \n", ft_printf("%S", L"Á±≥"));
