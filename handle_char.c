@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:15:55 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 16:12:12 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 16:27:02 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,7 @@ int			mod_charfmt(t_fmt *fmt, va_list *valist)
 		fmt->pad = '0';
 	else
 		fmt->pad = ' ';
+	if (c > 255)
+		return (-1);
 	return (ft_putchar_fmt((void *)(&c), fmt));
 }

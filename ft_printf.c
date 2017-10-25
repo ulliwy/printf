@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 13:07:06 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 16:28:26 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ int		parse_arg(va_list *valist, const char **s)
 	fmt.type = **s;
 	if ((len = print_arg(&fmt, valist)) == -1)
 	{
-		len = 0;
-		(*s)--;
+		//len = 0;
+		//(*s)--;
+		return (len);
 	}
 	(*s)++;
 	return (len);
