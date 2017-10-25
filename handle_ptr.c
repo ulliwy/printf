@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/25 11:38:45 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 15:28:07 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 16:09:30 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	get_hex(unsigned char *arr, t_fmt *fmt)
 			ft_putchar(HEX[arr[i] % 16]);
 			first = 0;
 		}
-		else if (((arr[i] / 16)) || !(first))
+		else if (arr[i] / 16 || !(first))
 		{
 			ft_putchar(HEX[arr[i] / 16]);
 			ft_putchar(HEX[arr[i] % 16]);
@@ -54,7 +54,7 @@ int		get_ptr_len(unsigned char *arr, t_fmt *fmt)
 			count++;
 			first = 0;
 		}
-		else if (((arr[i] / 16))|| !(first))
+		else if ((arr[i] / 16) || !(first))
 		{
 			count = count + 2;
 			first = 0;

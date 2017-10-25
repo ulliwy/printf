@@ -6,12 +6,11 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 15:22:21 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 13:18:27 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 16:11:01 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
-#include <stdio.h>
 
 int		get_unbr_digits(unsigned long long int nbr, t_fmt *fmt)
 {
