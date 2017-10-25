@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:43:18 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 15:48:12 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 15:56:38 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,7 @@ static int	print_str(t_fmt *fmt, void *c, int to_print)
 		return (to_print);
 	}
 	else
-	{
-		ft_putnstr(c, to_print);
-		return (to_print);
-	}
-	//return (ft_putnwstr(c, to_print));
+		return (ft_putnwstr(c, to_print));
 }
 
 int			ft_putstr_fmt(void *c, t_fmt *fmt)
@@ -38,8 +34,7 @@ int			ft_putstr_fmt(void *c, t_fmt *fmt)
 		ft_putstr("(null)");
 		return (6);
 	}
-	//len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c, fmt) : ft_strlen(c);
-	len = ft_strlen(c);
+	len = fmt->modifier == MOD_L ? ft_wstrlen((wchar_t *)c, fmt) : ft_strlen(c);
 	to_print = fmt->prec > len ? len : fmt->prec;
 	to_print = fmt->is_prec ? to_print : len;
 	spaces = fmt->length > to_print ? fmt->length - to_print : 0;
