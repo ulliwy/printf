@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/05 13:11:35 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 16:28:26 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 16:37:03 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int		print_arg(t_fmt *fmt, va_list *valist)
 {
 	if (!fmt->type)
-		return (-1);
+		return (-2);
 	else if (fmt->type == 'c' || fmt->type == 'C')
 		return (mod_charfmt(fmt, valist));
 	else if (fmt->type == 's' || fmt->type == 'S')
@@ -45,11 +45,13 @@ int		parse_arg(va_list *valist, const char **s)
 	get_precision(&fmt, s, valist);
 	get_modifier(&fmt, s);
 	fmt.type = **s;
-	if ((len = print_arg(&fmt, valist)) == -1)
-	{
-		//len = 0;
-		//(*s)--;
+	len = print_arg(&fmt, valist);
+	if (len == -1)
 		return (len);
+	if (len == -2)
+	{
+		len = 0;
+		(*s)--;
 	}
 	(*s)++;
 	return (len);
