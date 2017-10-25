@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 14:52:28 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/24 13:07:13 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 15:41:53 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int		ft_putnstr(char *c, int n)
 	if (c)
 		while (*c && n)
 		{
-			ft_putwchar(*c);
+			ft_putchar(*c);
+			//ft_putwchar(*c);
 			c++;
 			n--;
 			count++;
