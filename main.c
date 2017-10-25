@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:25 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/23 16:10:47 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/24 16:36:39 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int		main()
 	// printf("\"%d\" \n", printf("here: %d, 876876876%lc\n", 5, L'水'));
 	// printf(" \"%d\" \n", ft_printf("here: %d, 876876876%lc\n", 5, L'水'));
 
-	printf(" \"%d\" \n", printf("{%#0.4x}", 1));
-	printf(" \"%d\" \n", ft_printf("{%#0.4x}", 1));
+	printf(" \"%d\" \n", printf("%#.3x", 0));
+	printf(" \"%d\" \n", ft_printf("%#.3x", 0));
 
 	// printf(" \"%d\" \n", printf("%p", 0x1047d6500));
 	// printf(" \"%d\" \n", ft_printf("%p", 0x1047d6500));

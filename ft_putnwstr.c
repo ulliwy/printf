@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 14:11:41 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/19 11:37:58 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/24 13:08:43 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int		ft_putnwstr(wchar_t *str, int n)
 {
-	int 	count;
-	int		current;
-	unsigned int c;
+	int				count;
+	int				current;
+	unsigned int	c;
 
 	count = 0;
 	if (str)
@@ -35,4 +35,4 @@ int		ft_putnwstr(wchar_t *str, int n)
 		}
 	}
 	return (count);
-}	
+}

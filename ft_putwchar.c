@@ -6,29 +6,15 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/10 12:50:23 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/19 12:04:08 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/24 14:00:47 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		ft_putwchar(wchar_t _c)
+static int	ft_putbigwchar(unsigned int c)
 {
-	unsigned int	c;
-
-	c = (unsigned int)_c;
-	if (c <= 0x7F)
-	{
-		ft_putchar(c);
-		return (1);
-	}
-	else if (c <= 0x7FF)
-	{
-		ft_putchar((c >> 6) + 192);
-		ft_putchar((c & 63) + 128);
-		return (2);
-	}
-	else if (c <= 0x7FFFF)
+	if (c <= 0x7FFFF)
 	{
 		ft_putchar((c >> 12) + 224);
 		ft_putchar(((c >> 6) & 63) + 128);
@@ -44,4 +30,24 @@ int		ft_putwchar(wchar_t _c)
 		return (4);
 	}
 	return (0);
+}
+
+int			ft_putwchar(wchar_t c)
+{
+	unsigned int	uc;
+
+	uc = (unsigned int)c;
+	if (uc <= 0x7F)
+	{
+		ft_putchar(uc);
+		return (1);
+	}
+	else if (c <= 0x7FF)
+	{
+		ft_putchar((uc >> 6) + 192);
+		ft_putchar((uc & 63) + 128);
+		return (2);
+	}
+	else
+		return (ft_putbigwchar(uc));
 }

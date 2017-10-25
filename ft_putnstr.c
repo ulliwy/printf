@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 14:52:28 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/16 14:54:51 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/24 13:07:13 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		ft_putnstr(char *c, int n)
 {
-	int 	count;
+	int		count;
 
 	count = 0;
 	if (c)
@@ -26,4 +26,4 @@ int		ft_putnstr(char *c, int n)
 			count++;
 		}
 	return (count);
-}	
+}
