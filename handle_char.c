@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:15:55 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/24 14:42:23 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 15:36:16 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ static int	print_char(void *c, t_fmt *fmt)
 		return (1);
 	}
 	else
-		return (ft_putwchar(*((wchar_t *)c)));
+	{
+		ft_putchar(*((char *)c));
+		return (1);
+	}
 }
 
 int			ft_putchar_fmt(void *c, t_fmt *fmt)
