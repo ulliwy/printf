@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/24 15:23:31 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 13:05:46 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,11 @@ int				mod_charfmt(t_fmt *fmt, va_list *valist);
 int				mod_strfmt(t_fmt *fmt, va_list *valist);
 int				mod_intfmt(t_fmt *fmt, va_list *valist);
 int				mod_uintfmt(t_fmt *fmt, va_list *valist);
+int				mod_lintfmt(t_fmt *fmt, va_list *valist);
+int				mod_ptrfmt(t_fmt *fmt, va_list *valist);
 
 int				ft_putnbr_fmt(void *c, t_fmt *fmt);
+int				ft_putunbr_fmt(void *c, t_fmt *fmt);
 
 int				ft_putwchar(wchar_t c);
 size_t			ft_wstrlen(const wchar_t *str, t_fmt *fmt);

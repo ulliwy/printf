@@ -6,11 +6,12 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 15:22:21 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/24 16:44:12 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/25 13:18:27 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
 int		get_unbr_digits(unsigned long long int nbr, t_fmt *fmt)
 {
@@ -57,12 +58,14 @@ void	print_udigits(unsigned long long int nbr, int div, t_fmt *fmt)
 		ft_putchar(HEXC[nbr % div]);
 }
 
-int		print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits,
+void	print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits,
 					int zeroes)
 {
 	int div;
-	int ret;
 
+	if (!fmt->lajst)
+		while (fmt->space-- > 0)
+			ft_putchar(' ');
 	if (fmt->type == 'o' || fmt->type == 'O')
 		div = 8;
 	else if (fmt->type == 'x' || fmt->type == 'X')
@@ -75,42 +78,41 @@ int		print_unbr(unsigned long long int nbr, t_fmt *fmt, int digits,
 		ft_putstr("0x");
 	else if (nbr && fmt->altfm && fmt->type == 'X')
 		ft_putstr("0X");
-	if (fmt->is_prec && nbr && fmt->prec && fmt->altfm && fmt->type == 'x')
-		zeroes = fmt->prec - digits > 0 ? fmt->prec - digits : 0;
-	ret = zeroes;
 	while (zeroes--)
 		ft_putchar('0');
 	if (digits)
 		print_udigits(nbr, div, fmt);
-	return (ret);
+	if (fmt->lajst)
+		while (fmt->space-- > 0)
+			ft_putchar(' ');
 }
 
 int		ft_putunbr_fmt(void *c, t_fmt *fmt)
 {
 	unsigned long long int	nbr;
 	int						digits;
-	int						spaces;
 	int						sign;
 	int						zeroes;
 
 	zeroes = 0;
 	nbr = *((unsigned long long int *)c);
+	if (fmt->altfm && !nbr && !fmt->prec &&
+					(fmt->type == 'o' || fmt->type == 'O'))
+		fmt->prec = 1;
 	digits = (fmt->is_prec && !nbr) ? 0 : get_unbr_digits(nbr, fmt);
 	if (fmt->is_prec)
 		zeroes = digits > fmt->prec ? 0 : fmt->prec - digits;
 	else if (fmt->pad)
 		zeroes = fmt->length > digits ? fmt->length - digits : 0;
-	spaces = fmt->length > digits + zeroes ? fmt->length - digits - zeroes : 0;
+	fmt->space = fmt->length > digits + zeroes ?
+					fmt->length - digits - zeroes : 0;
 	if (fmt->is_prec && fmt->prec && fmt->altfm && fmt->type == 'x')
-		spaces = spaces - 2 > 0 ? spaces - 2 : 0;
-	sign = spaces + digits;
-	if (!fmt->lajst)
-		while (spaces-- > 0)
-			ft_putchar(' ');
-	sign += print_unbr(nbr, fmt, digits, zeroes);
-	if (fmt->lajst)
-		while (spaces-- > 0)
-			ft_putchar(' ');
+	{
+		zeroes = zeroes + 2;
+		fmt->space = fmt->space - 2 > 0 ? fmt->space - 2 : 0;
+	}
+	sign = fmt->space + zeroes + digits;
+	print_unbr(nbr, fmt, digits, zeroes);
 	return (sign);
 }
 
