@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:43:18 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 15:56:38 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/26 13:28:33 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	print_str(t_fmt *fmt, void *c, int to_print)
 {
 	if (fmt->modifier != MOD_L)
 	{
-		ft_putnstr(c, to_print);
+		ft_putnstr(c, to_print, fmt->unicode);
 		return (to_print);
 	}
 	else

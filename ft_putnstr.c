@@ -6,13 +6,13 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/16 14:52:28 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 15:41:53 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/26 13:28:07 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int		ft_putnstr(char *c, int n)
+int		ft_putnstr(char *c, int n, int unicode)
 {
 	int		count;
 
@@ -20,8 +20,10 @@ int		ft_putnstr(char *c, int n)
 	if (c)
 		while (*c && n)
 		{
-			ft_putchar(*c);
-			//ft_putwchar(*c);
+			if (unicode)
+				ft_putwchar(*c);
+			else
+				ft_putchar(*c);
 			c++;
 			n--;
 			count++;

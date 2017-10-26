@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:04:46 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/24 14:11:46 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/26 13:31:54 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,17 @@ static void	fmt_init(t_fmt *fmt)
 	fmt->is_prec = 0;
 	fmt->length = 0;
 	fmt->modifier = 0;
+	fmt->unicode = 0;
 }
 
 int			get_flags(t_fmt *fmt, const char **s)
 {
 	fmt_init(fmt);
+	if (**s == '^')
+	{
+		fmt->unicode = 1;
+		(*s)++;
+	}
 	while (1)
 	{
 		if (**s == '-')

@@ -6,11 +6,12 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/24 14:15:55 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 16:53:24 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/26 13:33:53 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
 static int	print_char(void *c, t_fmt *fmt)
 {
@@ -21,10 +22,14 @@ static int	print_char(void *c, t_fmt *fmt)
 	}
 	else
 	{
-		ft_putchar(*((char *)c));
-		return (1);
+		if (fmt->unicode)
+			return (ft_putwchar(*((wchar_t *)c)));
+		else
+		{
+			ft_putchar(*((char *)c));
+			return (1);
+		}
 	}
-	//return (ft_putwchar(*((wchar_t *)c)));
 }
 
 int			ft_putchar_fmt(void *c, t_fmt *fmt)
@@ -62,7 +67,7 @@ int			mod_charfmt(t_fmt *fmt, va_list *valist)
 		fmt->pad = '0';
 	else
 		fmt->pad = ' ';
-	if (fmt->modifier == MOD_L && c > 255)
+	if (fmt->modifier == MOD_L && c > 255 && !fmt->unicode)
 		return (-1);
 	return (ft_putchar_fmt((void *)(&c), fmt));
 }

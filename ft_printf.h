@@ -6,7 +6,7 @@
 /*   By: iprokofy <iprokofy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/06 11:41:56 by iprokofy          #+#    #+#             */
-/*   Updated: 2017/10/25 13:05:46 by iprokofy         ###   ########.fr       */
+/*   Updated: 2017/10/26 13:28:46 by iprokofy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_fmt
 	int			length;
 	int			modifier;
 	int			type;
+	int			unicode;
 }				t_fmt;
 
 int				ft_printf(const char *format, ...);
@@ -68,7 +69,7 @@ int				ft_putunbr_fmt(void *c, t_fmt *fmt);
 
 int				ft_putwchar(wchar_t c);
 size_t			ft_wstrlen(const wchar_t *str, t_fmt *fmt);
-int				ft_putnstr(char *c, int n);
+int				ft_putnstr(char *c, int n, int unicode);
 int				ft_putnwstr(wchar_t *c, int n);
 
 #endif
